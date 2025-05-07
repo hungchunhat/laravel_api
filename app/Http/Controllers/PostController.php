@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
-    public function addNewPost(Request $request){
+    public function addPost(Request $request){
         $validated = Validator::make($request->all(), [
             'title' => 'required|string',
             'content' => 'required|string',
@@ -33,6 +33,72 @@ class PostController extends Controller
             return response()->json([
                 'errors' => $e->getMessage()
             ],405);
+        }
+    }
+    public function editPost(Request $request, Post $post){
+        $validated = Validator::make($request->all(), [
+            'title' => 'required|string',
+            'content' => 'required|string',
+        ]);
+        if($validated->fails()){
+            return response()->json([
+                'errors' => $validated->errors()
+            ]);
+        }
+        try{
+            $data = $validated->validated();
+            $post->update([
+                'title' => $data['title'],
+                'content' => $data['content'],
+                'user_id' => Auth::id(),
+            ]);
+            return response()->json([
+                'message' => 'Post updated successfully',
+                'updated_post' => $post
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage()
+            ],405);
+        }
+    }
+    public function getAllPost(){
+        try{
+            $posts = Post::query()->with('user')->get();
+            return response()->json([
+                'posts' => $posts
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage()
+            ],500);
+        }
+    }
+    public function getPost($id){
+        try{
+            $post = Post::query()->with('user','comments')->findOrFail($id);
+            return response()->json([
+                'post' => $post
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage()
+            ],405);
+        }
+
+    }
+    public function deletePost($id)
+    {
+        try{
+            $post = Post::query()->findOrFail($id);
+            $post->delete();
+            return response()->json([
+                'message' => 'Post deleted successfully'
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+            ]);
         }
     }
 }
