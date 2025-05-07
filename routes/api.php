@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,5 @@ Route::get('/post/{id}', [PostController::class, 'getPost']);
 Route::delete('/delete/post/{id}', [PostController::class, 'deletePost'])->middleware('auth:sanctum');
 
 Route::post('/comment', [CommentController::class, 'postComment'])->middleware('auth:sanctum');
+Route::post('/like', [LikeController::class, 'likePost'])->middleware('auth:sanctum');
+Route::delete('/unlike', [LikeController::class, 'unLikePost'])->middleware('auth:sanctum');

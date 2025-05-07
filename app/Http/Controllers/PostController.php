@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -76,9 +77,10 @@ class PostController extends Controller
     }
     public function getPost($id){
         try{
-            $post = Post::query()->with('user','comments')->findOrFail($id);
+            $post = Post::query()->with('user','comments','likes')->findOrFail($id);
             return response()->json([
-                'post' => $post
+//                'post' => $post
+                'post' => new PostResource($post)
             ]);
         }catch (\Exception $e){
             return response()->json([

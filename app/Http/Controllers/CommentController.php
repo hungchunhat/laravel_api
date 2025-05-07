@@ -12,7 +12,7 @@ class CommentController extends Controller
     public function postComment(Request $request)
     {
         $validated = Validator::make($request->all(), [
-            'post_id' => 'required|integer',
+            'post_id' => 'required|integer|exists:posts,id',
             'comment' => 'required|string',
         ]);
         if ($validated->fails()) {
