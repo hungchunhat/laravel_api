@@ -14,7 +14,7 @@ Route::get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::delete('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('/add/post', [PostController::class, 'addPost'])->middleware('auth:sanctum');
 Route::patch('/edit/post/{post}', [PostController::class, 'editPost'])->middleware('auth:sanctum');

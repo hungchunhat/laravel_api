@@ -79,7 +79,6 @@ class PostController extends Controller
         try{
             $post = Post::query()->with('user','comments','likes')->findOrFail($id);
             return response()->json([
-//                'post' => $post
                 'post' => new PostResource($post)
             ]);
         }catch (\Exception $e){
